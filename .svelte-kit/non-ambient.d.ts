@@ -36,6 +36,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): "/cctv.jpg" | "/Donasi Online.jpg" | "/foto depan.jpg" | "/Home (TQ).png" | "/Home.png" | "/HRD.png" | "/Keuangan santri.png" | "/logo-khwarizmi.jpg" | "/Marketplace.jpg" | "/MENU AKADEMIK.png" | "/PPDB.jpg" | "/robots.txt" | "/Tahfidzul Quran.jpg" | string & {};
+		Asset(): "/Donasi Online.jpg" | "/HRD.png" | "/Home (TQ).png" | "/Home.png" | "/Keuangan santri.png" | "/MENU AKADEMIK.png" | "/Marketplace.jpg" | "/PPDB.jpg" | "/Tahfidzul Quran.jpg" | "/cctv.jpg" | "/foto depan.jpg" | "/logo-khwarizmi.jpg" | "/robots.txt" | string & {};
 	}
 }

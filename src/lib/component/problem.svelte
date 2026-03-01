@@ -1,5 +1,30 @@
 <script>
-  // FUNGSI ANIMASI REPLAY (Tetap sama)
+  import { fade, fly } from "svelte/transition";
+
+  // State untuk melacak item mana yang sedang aktif
+  let activeIndex = 0;
+
+  const problems = [
+    {
+      id: 0,
+      icon: "1",
+      title: "Manajemen tahfidz tidak terukur",
+      desc: "Kartu setoran manual sering hilang/rusak. Sulit memantau grafik kualitas hafalan (mutqin) dan target pencapaian santri."
+    },
+    {
+      id: 1,
+      icon: "2",
+      title: "Risiko Human Error & Fraud",
+      desc: "Pencatatan manual di kertas rawan hilang, rusak, atau dimanipulasi. Laporan keuangan sulit dipertanggungjawabkan."
+    },
+    {
+      id: 2,
+      icon: "3",
+      title: "Blind Spot Wali Santri",
+      desc: "Wali santri tidak memiliki akses pantauan hafalan atau aktivitas anak secara real-time, menciptakan celah komunikasi."
+    },
+  ];
+
   function replayAnim(node) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -9,73 +34,83 @@
           node.classList.remove('is-visible');
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.15 }); 
     observer.observe(node);
     return { destroy() { observer.disconnect(); } };
   }
 </script>
 
-<section class="problem-section-modern" id="problem" use:replayAnim>
+<section class="problem-section-pro" id="problem" use:replayAnim>
   
-  <div class="bg-grid"></div>
-  <div class="bg-blur-orb"></div>
-  
-  <div class="floating-elements">
-    <span class="float-icon f1">✕</span>
-    <span class="float-icon f2">?</span>
-    <span class="float-icon f3">!</span>
-    <span class="float-icon f4">⚠</span>
-    <svg class="bg-connector" width="100%" height="100%">
-      <path d="M100,200 Q400,50 700,200" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="10,10" class="dashed-path"/>
-    </svg>
-  </div>
+  <div class="bg-grid-decor"></div>
 
   <div class="container relative z-10">
     
-    <div class="section-header stagger-item">
-      <span class="pill-badge">⚠️ Realita Lapangan</span>
-      <h2>
-        Kendala Sistem <br>
-        <span class="highlight-wrapper">
-          Pengelolaan Manual
-          <span class="highlighter-bg"></span>
-        </span>
-      </h2>
-      <p>Metode konvensional yang seringkali menghambat akselerasi pesantren menuju era digital yang transparan.</p>
-    </div>
-
-    <div class="problem-grid-modern">
+    <div class="content-wrapper">
       
-      <div class="modern-card stagger-item">
-        <div class="card-top-row">
-          <div class="card-icon-box orange"><span class="emoji">👁️</span></div>
-          <span class="status-label warning">⚠ Needs Attention</span>
+      <div class="text-column stagger-item">
+        <div class="header-group">
+          <h2>
+            Kendala utama yang sering ada di 
+            <span class="text-highlight">
+              management pendidikan Islam
+              <svg class="markway-svg" viewBox="0 0 500 25" preserveAspectRatio="none">
+                <path d="M5,18 C150,5 350,30 495,15" />
+              </svg>
+            </span>
+          </h2>
+          <p>Pengelolaan manual bukan sekadar "cara lama", melainkan risiko strategis yang dapat menurunkan kredibilitas pesantren.</p>
         </div>
-        <div class="card-content">
-          <h3>Blind Spot Wali Santri</h3>
-          <p>Kecemasan orang tua akibat tidak adanya akses pantauan hafalan atau aktivitas anak secara <em>real-time</em>.</p>
+
+        <div class="feature-list">
+          {#each problems as item, i}
+            <div 
+              class="list-item {activeIndex === i ? 'active' : ''}" 
+              on:click={() => activeIndex = i}
+              on:keydown={() => activeIndex = i}
+              role="button"
+              tabindex="0"
+            >
+              <div class="icon-circle">
+                <span class="emoji">{item.icon}</span>
+              </div>
+              <div class="text-content">
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+              {#if activeIndex === i}
+                <div class="active-arrow" in:fly={{ x: -10, duration: 300 }}>→</div>
+              {/if}
+            </div>
+          {/each}
         </div>
       </div>
 
-      <div class="modern-card stagger-item">
-        <div class="card-top-row">
-          <div class="card-icon-box red"><span class="emoji">📉</span></div>
-          <span class="status-label danger">✕ Data Corrupted</span>
-        </div>
-        <div class="card-content">
-          <h3>Risiko Human Error</h3>
-          <p>Pencatatan di kertas rawan hilang atau rusak. Validitas laporan keuangan dan nilai menjadi sulit dipertanggungjawabkan.</p>
-        </div>
-      </div>
+      <div class="visual-column stagger-item">
+        <div class="display-area-clean">
+          
+          {#key activeIndex}
+            <div class="visual-content-wrapper" in:fade={{ duration: 600 }}>
+              
+              {#if activeIndex === 2}
+                <div class="image-display-clean">
+                  <img src="/IBU.png" alt="Ibu Khawatir" class="feature-image-pro" />
+                </div>
 
-      <div class="modern-card stagger-item">
-        <div class="card-top-row">
-          <div class="card-icon-box blue"><span class="emoji">⛓️</span></div>
-          <span class="status-label info">⟳ Not Synced</span>
-        </div>
-        <div class="card-content">
-          <h3>Silo Data Terpisah</h3>
-          <p>Data Keuangan, Akademik, dan Asrama tidak sinkron. Pimpinan sulit mengambil keputusan strategis yang tepat.</p>
+              {:else if activeIndex === 1}
+                <div class="image-display-clean">
+                   <img src="/UST.png" alt="Admin Pusing" class="feature-image-pro spec-image-right" />
+                </div>
+
+              {:else}
+                <div class="image-display-clean">
+                   <img src="/TAHFIDZ.png" alt="Data Berantakan" class="feature-image-pro" />
+                </div>
+              {/if}
+
+            </div>
+          {/key}
+
         </div>
       </div>
 
@@ -84,68 +119,150 @@
 </section>
 
 <style>
-  /* --- LAYOUT --- */
-  .problem-section-modern { padding: 120px 20px; background-color: #FFFFFF; position: relative; overflow: hidden; color: #1E293B; }
+  /* --- LAYOUT UTAMA --- */
+  .problem-section-pro {
+    padding: 120px 0;
+    background-color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    color: #1E293B;
+  }
 
-  /* --- ANIMASI TRANSISI --- */
-  :global(.problem-section-modern .stagger-item) { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  :global(.problem-section-modern.is-visible .stagger-item) { opacity: 1; transform: translateY(0); }
-  :global(.problem-section-modern.is-visible .stagger-item:nth-child(1)) { transition-delay: 0.1s; }
-  :global(.problem-section-modern.is-visible .stagger-item:nth-child(2)) { transition-delay: 0.2s; }
-  :global(.problem-section-modern.is-visible .stagger-item:nth-child(3)) { transition-delay: 0.3s; }
+  /* Animasi Fade In Section */
+  :global(.problem-section-pro .stagger-item) { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  :global(.problem-section-pro.is-visible .stagger-item) { opacity: 1; transform: translateY(0); }
+  :global(.problem-section-pro.is-visible .stagger-item:nth-child(2)) { transition-delay: 0.15s; }
 
-  /* --- BACKGROUND DECOR (BARU) --- */
-  .bg-grid { position: absolute; inset: 0; background-image: radial-gradient(#E2E8F0 1.5px, transparent 1.5px); background-size: 30px 30px; opacity: 0.7; z-index: 0; }
-  .bg-blur-orb { position: absolute; top: -150px; right: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, transparent 70%); border-radius: 50%; z-index: 0; pointer-events: none; }
+  .bg-grid-decor { position: absolute; inset: 0; background-image: radial-gradient(#CBD5E1 1.2px, transparent 1.2px); background-size: 30px 30px; opacity: 0.4; z-index: 0; mask-image: radial-gradient(circle, black 0%, transparent 70%); }
+
+  .container { 
+    max-width: 1280px; 
+    margin: 0 auto; 
+    padding-left: 60px; 
+    padding-right: 20px;
+  }
   
-  .floating-elements { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-  .float-icon { position: absolute; font-size: 2rem; font-weight: 900; color: #CBD5E1; opacity: 0.4; animation: floatAnim 6s infinite ease-in-out; }
-  .f1 { top: 20%; left: 10%; animation-delay: 0s; color: #FECACA; } /* Merah pudar */
-  .f2 { top: 15%; right: 15%; animation-delay: 1.5s; color: #FED7AA; } /* Orange pudar */
-  .f3 { bottom: 30%; left: 5%; animation-delay: 3s; font-size: 3rem; }
-  .f4 { bottom: 20%; right: 5%; animation-delay: 4.5s; font-size: 2.5rem; color: #FCA5A5; }
+  .content-wrapper { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 80px; 
+    align-items: center; 
+  }
 
-  @keyframes floatAnim { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
-
-  .bg-connector { position: absolute; top: 0; left: 0; opacity: 0.6; }
-  .dashed-path { stroke-dasharray: 10; animation: dashMove 30s linear infinite; }
-  @keyframes dashMove { to { stroke-dashoffset: 1000; } }
-
-  /* --- HEADER --- */
-  .section-header { text-align: center; max-width: 650px; margin: 0 auto 70px; position: relative; z-index: 2; }
-  .pill-badge { background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5; padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 20px; }
-  .section-header h2 { font-size: 3rem; font-weight: 800; line-height: 1.2; color: #0F172A; margin-bottom: 20px; }
-  .section-header p { font-size: 1.1rem; color: #64748B; line-height: 1.6; }
-
-  /* --- ANIMASI MARKAWAY --- */
-  .highlight-wrapper { position: relative; display: inline-block; z-index: 1; padding: 0 5px; }
-  .highlighter-bg { position: absolute; bottom: 5px; left: 0; width: 0%; height: 35%; background-color: #FDBA74; z-index: -1; opacity: 0.6; border-radius: 4px; transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); }
-  :global(.problem-section-modern.is-visible) .highlighter-bg { width: 100%; transition-delay: 0.6s; }
-
-  /* --- GRID CARDS --- */
-  .problem-grid-modern { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; position: relative; z-index: 2; }
-
-  /* CARD DESIGN BARU (LEBIH PADAT) */
-  .modern-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 20px; padding: 30px; position: relative; transition: all 0.4s ease; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); display: flex; flex-direction: column; gap: 20px; }
-  .modern-card:hover { transform: translateY(-8px) !important; box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.08); border-color: #F97316; }
-
-  .card-top-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  /* --- HEADER & TYPOGRAPHY --- */
+  .header-group { margin-bottom: 50px; }
   
-  /* Status Label (Bikin lebih Techy) */
-  .status-label { font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
-  .status-label.warning { background: #FEF3C7; color: #D97706; }
-  .status-label.danger { background: #FEE2E2; color: #DC2626; }
-  .status-label.info { background: #E0F2FE; color: #0284C7; }
+  h2 { font-size: 2.2rem; font-weight: 800; line-height: 1.15; color: #0F172A; margin: 0 0 20px; letter-spacing: -1.5px; }
+  
+  /* --- NEW MARKWAY STYLE --- */
+  .text-highlight { 
+    color: #F97316; 
+    position: relative; 
+    display: inline-block;
+  }
 
-  .card-icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: 0.3s; }
-  .card-icon-box.orange { background: #FFF7ED; color: #F97316; }
-  .card-icon-box.red { background: #FEF2F2; color: #EF4444; }
-  .card-icon-box.blue { background: #EFF6FF; color: #3B82F6; }
+  .markway-svg {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    z-index: -1;
+    pointer-events: none;
+  }
 
-  .modern-card:hover .card-icon-box { transform: scale(1.1) rotate(5deg); }
+  .markway-svg path {
+    fill: none;
+    stroke: #FDBA74; /* Warna highlight lembut */
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
 
-  .card-content h3 { font-size: 1.25rem; font-weight: 700; color: #0F172A; margin: 0 0 10px 0; }
-  .card-content p { font-size: 0.95rem; color: #64748B; line-height: 1.6; margin: 0; }
+  /* Trigger Animasi saat section visible */
+  :global(.problem-section-pro.is-visible) .markway-svg path {
+    stroke-dashoffset: 0;
+  }
 
-  @media (max-width: 968px) { .section-header h2 { font-size: 2.2rem; } .bg-blur-orb { display: none; } }
+  .header-group p { font-size: 1.1rem; color: #64748B; line-height: 1.6; }
+
+  /* --- LIST ITEMS --- */
+  .feature-list { display: flex; flex-direction: column; gap: 20px; }
+
+  .list-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 20px; border-radius: 16px;
+    cursor: pointer; transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .list-item:hover { background: #F8FAFC; }
+
+  .list-item.active {
+    background: #FFF7ED;
+    border-color: #FED7AA;
+    box-shadow: 0 8px 20px -5px rgba(249, 115, 22, 0.08);
+  }
+
+  .icon-circle {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: #F1F5F9; display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0; transition: 0.3s;
+  }
+
+  .list-item.active .icon-circle { background: #F97316; color: white; transform: scale(1.1); }
+
+  .text-content h3 { font-size: 1.25rem; font-weight: 700; color: #1E293B; margin: 0 0 5px 0; }
+  .text-content p { font-size: 0.95rem; color: #64748B; line-height: 1.6; margin: 0; }
+  
+  .active-arrow { font-size: 1.5rem; color: #F97316; font-weight: 800; margin-left: auto; align-self: center; }
+
+  /* --- VISUAL COLUMN --- */
+  .display-area-clean {
+    position: relative; 
+    width: 100%; 
+    height: 600px;
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-end;
+  }
+
+  .visual-content-wrapper { width: 100%; height: 100%; position: relative; }
+
+  /* --- FOTO DISPLAY --- */
+  .image-display-clean { 
+    position: relative; 
+    width: 100%; 
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-end; 
+  }
+  
+  .feature-image-pro {
+    height: 115%;
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    bottom: -8%;
+    mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.1) 10%, black 50%);
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.1) 10%, black 50%);
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+  }
+
+  .spec-image-right {
+    transform: translateX(40px); 
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 968px) {
+    .container { padding: 0 24px; text-align: left; }
+    .content-wrapper { grid-template-columns: 1fr; gap: 40px; }
+    .display-area-clean { height: 400px; order: -1; }
+    .feature-image-pro { height: 115%; bottom: -10%; }
+    .spec-image-right { transform: translateX(0); }
+    .header-group { text-align: center; }
+  }
 </style>

@@ -1,101 +1,238 @@
 <script>
-  import { slide, fade } from "svelte/transition";
-  // PENTING: Import dari $lib agar tidak error path
-  import { viewport } from "$lib/utils.js";
-
-  const features = [
-    { id: 1, icon: "👥", shortName: "HRD", title: "HRD & Kepegawaian", desc: "Kelola data asatidz dan karyawan dalam satu pintu. Hitung gaji otomatis.", points: ["Absensi GPS", "Slip Gaji WA"], image: "/HRD.png" },
-    { id: 2, icon: "🎓", shortName: "Akademik", title: "Manajemen Akademik", desc: "Digitalisasi kurikulum pesantren. Rapor otomatis.", points: ["Jadwal Live", "Rekap Nilai"], image: "/MENU AKADEMIK.png" },
-    { id: 3, icon: "📖", shortName: "Tahfidz", title: "Monitoring Tahfidz", desc: "Orang tua bisa melihat hafalan anak detik ini juga.", points: ["Grafik Hafalan", "Notifikasi Wali"], image: "/Home (TQ).png" },
-    { id: 4, icon: "💳", shortName: "Keuangan", title: "Keuangan & SPP", desc: "Sistem pembayaran terpusat. Virtual Account.", points: ["Cek Tunggakan", "Cashless"], image: "/Keuangan santri.png" },
-    { id: 5, icon: "📹", shortName: "CCTV", title: "Akses CCTV Wali", desc: "Akses kamera di area publik pesantren.", points: ["Streaming", "Privasi"], image: "/cctv.jpg" },
-    { id: 6, icon: "📝", shortName: "PPDB", title: "PPDB Online", desc: "Pendaftaran santri baru dari rumah.", points: ["Form Custom", "Ujian Online"], image: "/PPDB.jpg" },
-    { id: 7, icon: "📱", shortName: "Sosmed", title: "Sosmed Internal", desc: "Feed kegiatan khusus wali santri.", points: ["Foto/Video", "Aman"], image: "/Home.png" },
-    { id: 8, icon: "🛍️", shortName: "Market", title: "Marketplace Santri", desc: "Belanja kebutuhan anak lewat aplikasi.", points: ["Topup Saldo", "Belanja Jarak Jauh"], image: "/Marketplace.jpg" },
-    { id: 9, icon: "❤️", shortName: "Donasi", title: "Galang Donasi", desc: "Fundraising wakaf tunai di aplikasi.", points: ["Campaign", "Transparansi"], image: "/Donasi Online.jpg" }
-  ];
+  import { onMount } from "svelte";
+  import { fade, fly } from "svelte/transition";
+  import { cubicOut, quintOut } from "svelte/easing";
   
-  // Default active feature (Tahfidz)
-  let activeFeature = features[2]; 
+  // Data Features (Tetap sama)
+  const features = [
+    { id: 1, icon: "👥", shortName: "HRD", title: "Sistem HRD & Kepegawaian", desc: "Lupakan rekap manual yang melelahkan. Sistem ini mencatat kehadiran asatidz melalui GPS & Biometrik, menghitung jam lembur secara otomatis, hingga mengelola perizinan cuti dalam satu dashboard terpusat.", points: ["Absensi GPS Presisi", "Slip Gaji via WhatsApp", "Manajemen Cuti Digital"], image: "/HRD.png" },
+    { id: 2, icon: "🎓", shortName: "Akademik", title: "Manajemen Akademik Digital", desc: "Digitalisasi kurikulum pesantren dari hulu ke hilir. Mulai dari penyusunan jadwal pelajaran, input nilai harian, hingga pencetakan rapor UTS/UAS secara otomatis. Wali santri dapat memantau perkembangan akademik anak secara real-time.", points: ["Jadwal & Kalender", "Input Nilai Multi-Aspek", "Cetak Rapor Otomatis"], image: "/MENU AKADEMIK.png" },
+    { id: 3, icon: "📖", shortName: "Tahfidz", title: "Monitoring Progres Tahfidz", desc: "Fitur unggulan untuk pondok tahfidz. Setiap setoran hafalan santri langsung tercatat dan ternotifikasi ke HP orang tua detik itu juga. Dilengkapi dengan grafik perkembangan untuk melihat tren hafalan santri.", points: ["Notifikasi Setoran Real-time", "Grafik Target vs Capaian", "Jurnal Harian Musyrif"], image: "/Home (TQ).png" },
+    { id: 4, icon: "💳", shortName: "Keuangan", title: "Keuangan & SPP Cashless", desc: "Kelola arus kas pesantren dengan transparansi tinggi. Wali santri bisa membayar SPP melalui Virtual Account, E-Wallet, atau Minimarket. Bendahara tidak perlu lagi pusing mencatat uang tunai atau menagih manual.", points: ["Multi-Channel Payment (VA)", "Laporan Arus Kas Harian", "Pengingat Tagihan Otomatis"], image: "/Keuangan santri.png" },
+    { id: 5, icon: "📹", shortName: "CCTV", title: "Akses CCTV Wali Santri", desc: "Berikan ketenangan batin bagi orang tua yang jauh. Fitur ini memungkinkan wali santri melihat aktivitas anaknya di area publik pesantren (kantin, lapangan, masjid) melalui aplikasi dengan akses terbatas.", points: ["Streaming Server Stabil", "Jadwal Akses Terbatas", "Keamanan Privasi Terjaga"], image: "/cctv.jpg" },
+    { id: 6, icon: "📝", shortName: "PPDB", title: "PPDB Online & Seleksi", desc: "Jaring santri berkualitas dari seluruh penjuru negeri. Calon wali santri dapat mendaftar, mengunggah berkas, hingga melakukan ujian seleksi secara online. Panitia tinggal memantau data masuk.", points: ["Formulir Custom", "Ujian CBT Online", "Generate Kartu Ujian"], image: "/PPDB.jpg" },
+    { id: 7, icon: "📱", shortName: "Sosmed", title: "Sosial Media Internal", desc: "Wadah komunikasi resmi antara pesantren dan wali santri. Admin dapat membagikan foto/video kegiatan pondok layaknya Instagram, namun di lingkungan yang aman dan tertutup khusus internal.", points: ["Feed Kegiatan Harian", "Interaksi Wali & Santri", "Lingkungan Digital Aman"], image: "/Home.png" },
+    { id: 8, icon: "🛍️", shortName: "Market", title: "Marketplace & Kantin", desc: "Solusi uang saku digital. Orang tua bisa membelikan kebutuhan anak (kitab, seragam, makanan) lewat aplikasi, atau sekadar top-up saldo kartu santri agar belanja lebih terkontrol.", points: ["Belanja Jarak Jauh", "Topup Saldo Santri", "Limit Belanja Harian"], image: "/Marketplace.jpg" },
+    { id: 9, icon: "❤️", shortName: "Donasi", title: "Platform Donasi & Wakaf", desc: "Bangun kemandirian ekonomi pesantren. Fitur ini memfasilitasi program wakaf tunai, donasi pembangunan, atau infaq makan santri langsung di aplikasi secara transparan dan akuntabel.", points: ["Campaign Program Donasi", "Update Progres Pembangunan", "Laporan Penyaluran"], image: "/Donasi Online.jpg" }
+  ];
+   
+  let activeFeature = features[2];
+  let sectionRef;
+  let isVisible = false;
+
+  // Logic untuk mendeteksi Scroll
+  onMount(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          isVisible = true;
+          observer.unobserve(entry.target); // Hanya animasi sekali saat masuk
+        }
+      });
+    }, { threshold: 0.15 }); // Animasi mulai saat 15% section terlihat
+
+    if (sectionRef) observer.observe(sectionRef);
+    return () => observer.disconnect();
+  });
 </script>
 
-<section class="solution-section" id="features" use:viewport>
-  <div class="tech-grid-bg"></div><div class="vignette-overlay"></div>
+<section class="solution-section {isVisible ? 'is-visible' : ''}" id="features" bind:this={sectionRef}>
+  
+  <div class="tech-grid-bg"></div>
+  
   <div class="container relative z-10">
-    <div class="section-header-left stagger-item">
-      <div class="label-wrapper"><span class="pulsing-dot"></span><span class="label-text">ECOSYSTEM OVERVIEW</span></div>
-      <h2>Solusi Lengkap, <br><span class="text-highlight">Informasi Jelas.</span></h2>
-      <p>Pilih modul di bawah untuk melihat detail bagaimana sistem bekerja.</p>
-    </div>
-    <div class="dashboard-layout">
-      <div class="feature-accordion stagger-item">
-        {#each features as feature}
-          <div class="accordion-item {activeFeature.id === feature.id ? 'active' : ''}" on:click={() => activeFeature = feature} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && (activeFeature = feature)}>
-            <div class="acc-head">
-              <div class="icon-box">{feature.icon}</div>
-              <div class="head-info"><h4>{feature.title}</h4>{#if activeFeature.id !== feature.id}<span class="short-desc-preview">Klik untuk detail</span>{/if}</div>
-              {#if activeFeature.id === feature.id}<div class="active-indicator"></div>{/if}
-            </div>
-            {#if activeFeature.id === feature.id}
-              <div class="acc-body" transition:slide={{ duration: 300 }}>
-                <p class="main-desc">{feature.desc}</p>
-                <div class="tags-container">{#each feature.points as point}<span class="feature-tag">✨ {point}</span>{/each}</div>
-                <button class="btn-learn-more">Pelajari Modul Ini →</button>
-              </div>
-            {/if}
-            {#if activeFeature.id === feature.id}<div class="progress-line"></div>{/if}
-          </div>
-        {/each}
-      </div>
-      <div class="visual-stage stagger-item">
-        <div class="device-showcase">
-          <div class="device-glow"></div>
-          <div class="phone-frame-modern"><div class=""></div><div class="screen-display">{#key activeFeature}<img src={activeFeature.image} alt={activeFeature.title} in:fade={{ duration: 400 }} />{/key}<div class="screen-overlay"></div></div></div>
+    
+    <div class="section-header text-center reveal-item delay-1">
+      <h2 class="main-title">Solusi Pesantren dalam <span class="text-highlight">Satu Genggaman</span></h2>
+      <p class="sub-title">Automasi menyeluruh untuk keputusan tepat, efisiensi tinggi, dan ketenangan wali santri.</p>
+      
+      <div class="tabs-container reveal-item delay-2">
+        <div class="tabs-scroll">
+          {#each features as feature}
+            <button 
+              class="tab-pill {activeFeature.id === feature.id ? 'active' : ''}" 
+              on:click={() => activeFeature = feature}
+            >
+              {feature.shortName}
+            </button>
+          {/each}
         </div>
       </div>
+    </div>
+
+    <div class="feature-display-grid reveal-item delay-3">
+      
+      <div class="visual-col">
+        <div class="projector-base-glow"></div>
+        <div class="hologram-stage">
+          {#key activeFeature.id}
+            <div 
+              class="hologram-card-wrapper"
+              in:fly={{ y: 20, duration: 800, easing: quintOut }} 
+              out:fade={{ duration: 400, easing: cubicOut }}
+            >
+              <div class="hologram-card">
+                <div class="scanline"></div>
+                <div class="glass-shimmer"></div>
+                <div class="screen-content">
+                  <img src={activeFeature.image} alt={activeFeature.title} class="feature-img" />
+                </div>
+                <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+              </div>
+              <div class="hologram-label"><span class="pulse-dot"></span>{activeFeature.shortName} Live View</div>
+            </div>
+          {/key}
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="text-stage">
+          {#key activeFeature.id}
+            <div 
+              class="text-content-wrapper"
+              in:fly={{ x: 20, duration: 600, delay: 100, easing: quintOut }} 
+              out:fade={{ duration: 300 }}
+            >
+              <h3 class="feature-headline"><span class="text-highlight">{activeFeature.title}</span></h3>
+              <p class="feature-desc">{activeFeature.desc}</p>
+              <div class="points-list">
+                {#each activeFeature.points as point}
+                  <div class="point-item">
+                    <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                    <span class="point-text">{point}</span>
+                  </div>
+                {/each}
+              </div>
+              <div class="action-area">
+                <button class="btn-cta">Pelajari Modul {activeFeature.shortName} →</button>
+              </div>
+            </div>
+          {/key}
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
 <style>
-  .solution-section { background-color: #0B1120; padding: 100px 0 140px; position: relative; overflow: hidden; color: white; } 
-  .tech-grid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.4; z-index: 0; } 
-  .vignette-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, transparent 0%, #0B1120 90%); z-index: 1; pointer-events: none; } 
-  .section-header-left { margin-bottom: 50px; position: relative; z-index: 2; } 
-  .label-wrapper { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); } 
-  .pulsing-dot { width: 8px; height: 8px; background: #22C55E; border-radius: 50%; box-shadow: 0 0 10px #22C55E; animation: blink 2s infinite; } 
-  .label-text { font-size: 0.75rem; font-weight: 700; color: #94A3B8; letter-spacing: 1px; } 
-  .section-header-left h2 { font-size: 3rem; margin: 0 0 15px 0; line-height: 1.1; } 
-  .text-highlight { color: var(--primary); } 
-  .section-header-left p { color: #94A3B8; font-size: 1.1rem; max-width: 500px; } 
-  .dashboard-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; position: relative; z-index: 5; } 
-  .feature-accordion { display: flex; flex-direction: column; gap: 16px; max-height: 600px; overflow-y: auto; padding: 20px 12px 20px 0; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40px, black calc(100% - 40px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, black 40px, black calc(100% - 40px), transparent 100%); } 
-  .feature-accordion::-webkit-scrollbar { width: 4px; } 
-  .feature-accordion::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; margin: 20px 0; } 
-  .feature-accordion::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; } 
-  .feature-accordion::-webkit-scrollbar-thumb:hover { background: var(--primary); } 
-  .accordion-item { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; position: relative; flex-shrink: 0; } 
-  .accordion-item:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); } 
-  .accordion-item.active { background: #1E293B; border-color: var(--primary); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); } 
-  .acc-head { display: flex; align-items: center; gap: 15px; padding: 18px 24px; } 
-  .icon-box { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 10px; display: grid; place-items: center; font-size: 1.2rem; transition: 0.3s; } 
-  .accordion-item.active .icon-box { background: var(--primary); color: white; transform: scale(1.1); } 
-  .head-info h4 { margin: 0; font-size: 1.1rem; font-weight: 600; color: #E2E8F0; } 
-  .short-desc-preview { font-size: 0.8rem; color: #64748B; } 
-  .active-indicator { margin-left: auto; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); } 
-  .acc-body { padding: 0 24px 24px 79px; } 
-  .main-desc { color: #CBD5E1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; } 
-  .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; } 
-  .feature-tag { background: rgba(255,255,255,0.08); color: #38BDF8; font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; font-weight: 500; } 
-  .btn-learn-more { background: transparent; border: none; color: var(--primary); font-weight: 700; font-size: 0.9rem; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 5px; transition: 0.3s; } 
-  .btn-learn-more:hover { gap: 10px; } 
-  .progress-line { height: 2px; background: linear-gradient(90deg, var(--primary), transparent); width: 0%; animation: loadLine 5s linear forwards; } 
-  @keyframes loadLine { to { width: 100%; } } 
-  .visual-stage { position: sticky; top: 150px; height: fit-content; display: flex; justify-content: center; } 
-  .device-showcase { position: relative; width: 320px; height: 640px; } 
-  .device-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120%; height: 80%; background: radial-gradient(circle, rgba(249, 115, 22, 0.15), transparent 70%); filter: blur(60px); z-index: 0; } 
-  .phone-frame-modern { position: relative; width: 100%; height: 100%; background: #000; border-radius: 48px; box-shadow: 0 0 0 4px #334155, 0 0 0 8px #1e293b, 0 30px 80px rgba(0,0,0,0.6); overflow: hidden; z-index: 5; } 
-  .screen-display img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; } 
-  .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent, rgba(0,0,0,0.2)); pointer-events: none; }
-  @media (max-width: 968px) { .dashboard-layout { grid-template-columns: 1fr; gap: 50px; } .feature-accordion { order: 2; max-height: none; overflow: visible; padding: 0; mask-image: none; -webkit-mask-image: none; } .visual-stage { order: 1; position: relative; top: 0; margin-bottom: 20px; } .phone-frame-modern { height: 450px; } .device-showcase { width: 240px; height: 450px; margin: 0 auto; } }
+  /* --- SCROLL ANIMATION STYLES --- */
+  
+  /* Status Awal: Tersembunyi & Turun sedikit */
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Easing yang smooth */
+    will-change: opacity, transform;
+  }
+
+  /* Status Akhir: Muncul Normal (Dipicu class .is-visible di section) */
+  .solution-section.is-visible .reveal-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Delay Berurutan (Stagger) */
+  .delay-1 { transition-delay: 0.1s; } /* Judul muncul duluan */
+  .delay-2 { transition-delay: 0.3s; } /* Tab menu menyusul */
+  .delay-3 { transition-delay: 0.5s; } /* Konten utama terakhir */
+
+  /* ------------------------------- */
+
+  /* --- GLOBAL CONFIG --- */
+  .solution-section { 
+    background-color: #FFFFFF; 
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7ED 100%); 
+    padding: 80px 0 200px; /* Space bawah luas */
+    position: relative; 
+    overflow: hidden; 
+    color: #1E293B;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .text-highlight { color: #F97316; }
+  .relative { position: relative; }
+  .z-10 { z-index: 10; }
+
+  /* Background Grid */
+  .tech-grid-bg { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background-image: linear-gradient(rgba(249, 115, 22, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(249, 115, 22, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px; z-index: 0; 
+  }
+
+  /* --- HEADER & TABS --- */
+  .section-header { text-align: center; margin-bottom: 60px; position: relative; z-index: 5; }
+  .main-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 12px; color: #0F172A; letter-spacing: -0.02em; }
+  .sub-title { color: #64748B; max-width: 650px; margin: 0 auto 40px; font-size: 1.1rem; line-height: 1.6; }
+
+  .tabs-container { display: flex; justify-content: center; }
+  .tabs-scroll { display: flex; gap: 8px; background: white; padding: 6px; border-radius: 50px; border: 1px solid #E2E8F0; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05); overflow-x: auto; scrollbar-width: none; }
+  .tabs-scroll::-webkit-scrollbar { display: none; }
+  
+  .tab-pill { background: transparent; border: none; color: #64748B; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.9rem; white-space: nowrap; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .tab-pill:hover { color: #F97316; background: #FFF7ED; }
+  .tab-pill.active { background: #F97316; color: white; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); }
+
+  /* --- GRID LAYOUT --- */
+  .feature-display-grid { display: grid; grid-template-columns: 45% 50%; gap: 5%; align-items: center; min-height: 550px; }
+
+  /* --- VISUAL COL --- */
+  .visual-col { position: relative; height: 500px; display: flex; justify-content: center; align-items: center; }
+  .hologram-stage { display: grid; width: 320px; height: 100%; align-items: center; justify-items: center; }
+  .hologram-card-wrapper { grid-area: 1 / 1; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 2; }
+
+  .projector-base-glow { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 200px; height: 40px; background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.4) 0%, transparent 70%); filter: blur(15px); z-index: 1; animation: pulseGlow 3s infinite alternate; }
+  @keyframes pulseGlow { from { opacity: 0.5; transform: translateX(-50%) scale(0.8); } to { opacity: 1; transform: translateX(-50%) scale(1.1); } }
+
+  .hologram-card { position: relative; width: 100%; aspect-ratio: 9/18; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.8); border-radius: 24px; box-shadow: 0 20px 50px -10px rgba(249, 115, 22, 0.15), 0 0 0 1px rgba(249, 115, 22, 0.1); overflow: hidden; transform: perspective(1000px) rotateY(-2deg); transition: transform 0.5s; }
+  .hologram-card:hover { transform: perspective(1000px) rotateY(0deg) translateY(-5px); }
+
+  .screen-content { width: 100%; height: 100%; padding: 8px; }
+  .feature-img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
+
+  .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 50%, rgba(249, 115, 22, 0.03) 50%); background-size: 100% 4px; pointer-events: none; z-index: 5; }
+  .glass-shimmer { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); transform: skewX(-20deg); animation: shimmer 4s infinite; pointer-events: none; z-index: 6; }
+  @keyframes shimmer { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+  .corner { position: absolute; width: 20px; height: 20px; border: 2px solid #F97316; opacity: 0.5; z-index: 10; }
+  .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; border-radius: 6px 0 0 0; }
+  .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; border-radius: 0 6px 0 0; }
+  .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; border-radius: 0 0 0 6px; }
+  .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; border-radius: 0 0 6px 0; }
+
+  .hologram-label { margin-top: 20px; background: rgba(249, 115, 22, 0.08); color: #EA580C; padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(249, 115, 22, 0.2); }
+  .pulse-dot { width: 6px; height: 6px; background: #F97316; border-radius: 50%; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* --- CONTENT COL --- */
+  .content-col { padding-left: 20px; }
+  .text-stage { display: grid; }
+  .text-content-wrapper { grid-area: 1 / 1; }
+  .feature-headline { font-size: 2rem; line-height: 1.25; margin-bottom: 20px; font-weight: 800; color: #1E293B; }
+  .feature-desc { color: #475569; font-size: 1.05rem; line-height: 1.7; margin-bottom: 30px; }
+  
+  .points-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+  .point-item { display: flex; align-items: center; gap: 16px; padding: 12px; background: white; border-radius: 12px; border: 1px solid #F1F5F9; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s; }
+  .point-item:hover { transform: translateX(5px); border-color: #FED7AA; }
+  .check-icon { width: 24px; height: 24px; color: #F97316; flex-shrink: 0; }
+  .point-text { font-weight: 600; color: #334155; font-size: 1rem; }
+
+  .btn-cta { background: #F97316; color: white; border: none; padding: 14px 32px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px -5px rgba(249, 115, 22, 0.3); }
+  .btn-cta:hover { background: #EA580C; transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(249, 115, 22, 0.4); }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 968px) {
+    .feature-display-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .content-col { padding-left: 0; order: 2; }
+    .visual-col { order: 1; margin-bottom: 20px; height: 450px; }
+    .hologram-stage { width: 280px; }
+    .points-list { align-items: flex-start; text-align: left; }
+    .main-title { font-size: 2rem; }
+    .tabs-scroll { justify-content: flex-start; }
+    .corner { display: none; }
+    .solution-section { padding-bottom: 120px; }
+  }
 </style>

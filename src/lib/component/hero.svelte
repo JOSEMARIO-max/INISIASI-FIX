@@ -4,12 +4,32 @@
 
   let scrollY = 0;
 
+  // --- FUNGSI NAVIGASI BARU ---
+
+  // 1. Fungsi Scroll ke Section Fitur
+  function scrollToFeatures() {
+    const el = document.getElementById('features'); // Pastikan section fitur punya id="features"
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // 2. Fungsi Buka WhatsApp
+  function openWhatsApp() {
+    // GANTI NOMOR INI dengan nomor WA Admin (format: 628...)
+    const phoneNumber = "628123456789"; 
+    
+    // Pesan otomatis yang akan muncul
+    const message = encodeURIComponent("Halo, saya tertarik untuk menjadwalkan demo INISIASI.");
+    
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  }
+
+  // Fungsi scroll mouse (bawaan lama)
   function scrollToProblem() {
     const el = document.getElementById('problem');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
 
-  // DATA PARTNER (Sesuai request terakhir)
+  // DATA PARTNER
   const partners = [
     { src: "/SINT.png", alt: "Kemenag" },       
     { src: "/logo-khwarizmi.jpg", alt: "NU" },                 
@@ -44,8 +64,15 @@
       </p>
 
       <div class="cta-group" in:fly={{ y: 30, duration: 1000, delay: 800, easing: cubicOut }}>
-        <button class="btn-primary pulse-effect">Jadwalkan Demo</button>
-        <button class="btn-secondary">Pelajari Fitur</button>
+        
+        <button class="btn-primary pulse-effect" on:click={openWhatsApp}>
+          Jadwalkan Demo
+        </button>
+        
+        <button class="btn-secondary" on:click={scrollToFeatures}>
+          Pelajari Fitur
+        </button>
+
       </div>
 
       <div class="trusted-section" in:fade={{ duration: 1000, delay: 1000 }}>
@@ -79,7 +106,7 @@
 
   </div>
 
-  <div class="scroll-indicator" on:click={scrollToProblem} style="opacity: {1 - scrollY / 300};">
+  <div class="scroll-indicator" on:click={scrollToFeatures} style="opacity: {1 - scrollY / 300};">
     <div class="mouse"><div class="wheel"></div></div>
     <span>Scroll</span>
   </div>
@@ -89,13 +116,13 @@
   /* --- 1. LAYOUT UTAMA (GRID SYSTEM) --- */
   .hero {
     min-height: 100vh;
-    padding-top: 120px; /* Jarak dari atas aman */
+    padding-top: 120px;
     padding-bottom: 80px;
     position: relative;
     display: flex;
     align-items: center;
     overflow: hidden;
-    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7ED 100%); /* Warna Background Fix */
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7ED 100%);
   }
 
   .container {
@@ -107,7 +134,7 @@
 
   .hero-grid {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr; /* Pembagian kolom 55% - 45% */
+    grid-template-columns: 1.1fr 0.9fr;
     gap: 60px;
     align-items: center;
     z-index: 1;
@@ -138,7 +165,7 @@
   }
 
   h1 {
-    font-size: 3.5rem; /* Ukuran pas, tidak terlalu besar */
+    font-size: 3.5rem;
     font-weight: 800;
     color: #1E293B;
     line-height: 1.1;
@@ -160,7 +187,7 @@
     max-width: 90%;
   }
 
-  /* --- 3. BUTTONS (FIX WARNA) --- */
+  /* --- 3. BUTTONS --- */
   .cta-group {
     display: flex;
     gap: 16px;
@@ -169,7 +196,7 @@
   }
 
   .btn-primary {
-    background: #F97316; /* Fixed Orange */
+    background: #F97316;
     color: white;
     border: none;
     padding: 16px 32px;
@@ -243,7 +270,7 @@
     transform: scale(1.05);
   }
 
-  /* --- 5. VISUAL KANAN (HOLOGRAM) --- */
+  /* --- 5. VISUAL KANAN --- */
   .hero-visual {
     display: flex;
     justify-content: center;
@@ -254,7 +281,7 @@
   .hologram-deck {
     position: relative;
     width: 100%;
-    height: 500px; /* Area gambar fix */
+    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -310,18 +337,15 @@
   .scroll-indicator span { font-size: 0.7rem; font-weight: 700; color: #1E293B; letter-spacing: 1px; text-transform: uppercase; }
   @keyframes scrollMouse { 0% { opacity: 1; top: 8px; } 100% { opacity: 0; top: 20px; } }
 
-  /* --- 7. RESPONSIVE (MOBILE) --- */
+  /* --- 7. RESPONSIVE --- */
   @media (max-width: 968px) {
     .hero { padding-top: 100px; text-align: center; }
     .hero-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 0; }
-    
     .hero-text { align-items: center; text-align: center; margin: 0 auto; }
     h1 { font-size: 2.5rem; }
-    
     .cta-group { justify-content: center; }
     .trusted-section { display: flex; flex-direction: column; align-items: center; }
     .logo-grid { justify-content: center; }
-    
-    .hero-visual { display: none; /* Sembunyikan gambar di HP biar rapi */ }
+    .hero-visual { display: none; }
   }
 </style>

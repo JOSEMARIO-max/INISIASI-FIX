@@ -1,153 +1,242 @@
 <script>
-  // PENTING: Import dari $lib agar path benar
+  // PENTING: Gunakan utilitas viewport yang kamu punya
   import { viewport } from "$lib/utils.js";
+
+  // Data distruktur ulang agar cocok dengan layout Bento Grid
+  const features = [
+    { title: "HRD & Staff", desc: "Manajemen SDM", icon: "👥", span: "col-span-1 row-span-1" },
+    { title: "Academic", desc: "Sistem Belajar", icon: "📚", span: "col-span-1 row-span-1" },
+    { title: "Tahfidz", desc: "Monitoring Hafalan", icon: "📖", span: "col-span-1 row-span-1" },
+    { title: "Social Media", desc: "Eksklusif Pondok", icon: "📱", span: "col-span-1 row-span-1" },
+    { title: "CCTV For Parents", desc: "Akses Real-time", icon: "🎥", span: "col-span-2 row-span-1" },
+    { title: "Finance Gateway", desc: "Sistem Pembayaran", icon: "💳", span: "col-span-2 row-span-1" },
+    { title: "Marketplace", desc: "Ekonomi Pesantren", icon: "🛒", span: "col-span-1 row-span-1" },
+    { title: "Donation", desc: "Galang Dana", icon: "🤝", span: "col-span-1 row-span-1" },
+    { title: "PPDB", desc: "Penerimaan Santri", icon: "📝", span: "col-span-2 row-span-1" }
+  ];
 </script>
 
-<section class="pricing-section-light" id="pricing" use:viewport>
-  <div class="bg-grid-slate"></div>
-
+<section class="bento-universe-light" id="pricing" use:viewport>
   <div class="container relative z-10">
-    <div class="pricing-header-light stagger-item">
-      <span class="badge-pill-orange">Biaya Investasi</span>
-      <h2>Pilihan Paket Fleksibel</h2>
-      <p>Transparan, tanpa biaya tersembunyi. Sesuaikan dengan kondisi kas pesantren.</p>
-    </div>
     
-    <div class="pricing-grid-equal stagger-item">
+    <div class="header-section fade-in-section">
+      <h2 class="cinematic-title">Evolusi <br><span class="highlight-text">Ekosistem Digital</span></h2>
+      <p>Bukan sekadar aplikasi, ini adalah infrastruktur masa depan pesantren Anda.</p>
+    </div>
+
+    <div class="bento-grid">
       
-      <div class="pricing-card-clean">
-        <div class="card-body">
-          <div class="plan-top">
-            <div class="icon-circle gray">⚡</div>
-            <div class="plan-name">
-              <h3>Monthly</h3>
-              <span class="plan-tag">Pay as you go</span>
-            </div>
-          </div>
-          
-          <div class="price-area">
-            <span class="curr">Rp</span>
-            <span class="val">50</span>
-            <div class="period">
-              <span class="u">Juta</span>
-              <span class="p">/ Bulan</span>
-            </div>
-          </div>
-
-          <p class="plan-desc-clean">Cocok untuk tahap awal transisi digital tanpa komitmen jangka panjang.</p>
-          
-          <div class="divider-dashed"></div>
-
-          <ul class="check-list-clean">
-            <li><span class="chk">✓</span> Akses Full 9 Modul Utama</li>
-            <li><span class="chk">✓</span> Unlimited Data Santri</li>
-            <li><span class="chk">✓</span> Private Cloud Server</li>
-            <li><span class="chk">✓</span> White-Label Apps</li>
-            <li class="muted"><span class="cross">✕</span> Jalur Implementasi VIP</li>
-          </ul>
-        </div>
+      <div class="bento-item main-price-card col-span-2 row-span-2 anim-reveal" style="--i: 0">
+        <div class="hover-glow"></div>
         
-        <div class="card-footer">
+        <div class="content-wrapper">
+          <div class="badge-status">LISENSI SEUMUR HIDUP</div>
+          <h3>Full Package</h3>
+          <div class="price-typography">
+            <span class="curr">Rp</span>
+            <span class="amount">50</span>
+            <span class="unit">JUTA</span>
+          </div>
+          <p class="desc">Beli putus. Bebas biaya langganan bulanan. Kuasai semua fitur utama tanpa batasan waktu.</p>
+          
+          <button class="bento-btn">
+            <span>Inisiasi Transformasi</span>
+            <div class="btn-flare"></div>
+          </button>
         </div>
       </div>
 
-      <div class="pricing-card-clean premium-border">
-        <div class="best-value-ribbon">🏆 REKOMENDASI</div>
-        
-        <div class="card-body">
-          <div class="plan-top">
-            <div class="icon-circle orange">💎</div>
-            <div class="plan-name">
-              <h3>Annual VIP</h3>
-              <span class="plan-tag orange-bg">Hemat & Prioritas</span>
-            </div>
+      {#each features as feat, i}
+        <div class="bento-item feature-card {feat.span} anim-reveal" style="--i: {i + 1}">
+          <div class="feat-icon">{feat.icon}</div>
+          <div class="feat-text">
+            <h4>{feat.title}</h4>
+            <span>{feat.desc}</span>
           </div>
-
-          <div class="price-area">
-            <span class="curr">Rp</span>
-            <span class="val">600</span>
-            <div class="period">
-              <span class="u">Juta</span>
-              <span class="p">/ Tahun</span>
-            </div>
-          </div>
-
-          <p class="plan-desc-clean">Solusi bebas ribet. Sekali bayar untuk ketenangan pikiran satu tahun penuh.</p>
-
-          <div class="benefit-box">
-            <span>🔥 Free Layanan Prioritas 24/7</span>
-          </div>
-
-          <div class="divider-dashed"></div>
-
-          <ul class="check-list-clean">
-            <li><span class="chk-orange">✦</span> <strong>SEMUA Fitur Paket Bulanan</strong></li>
-            <li><span class="chk-orange">✦</span> Jalur Implementasi VIP (Fast)</li>
-            <li><span class="chk-orange">✦</span> Dedicated Account Manager</li>
-            <li><span class="chk-orange">✦</span> Gratis Kunjungan Tim Teknis</li>
-            <li><span class="chk-orange">✦</span> Kontrak SLA (Jaminan Uptime)</li>
-          </ul>
+          <div class="hover-border"></div>
         </div>
-
-        <div class="card-footer">
-        </div>
-      </div>
+      {/each}
 
     </div>
   </div>
 </section>
 
 <style>
-  .pricing-section-light { padding: 80px 20px 280px 20px; background: #F8FAFC; position: relative; color: #1E293B; } 
-  .bg-grid-slate { position: absolute; inset: 0; background-image: radial-gradient(#CBD5E1 1px, transparent 1px); background-size: 30px 30px; opacity: 0.5; } 
-  .pricing-header-light { text-align: center; margin-bottom: 60px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 5; } 
-  .badge-pill-orange { background: #FFF7ED; color: #EA580C; border: 1px solid #FED7AA; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; } 
-  .pricing-header-light h2 { font-size: 2.5rem; margin: 0 0 15px; font-weight: 800; color: #0F172A; } 
-  .pricing-header-light p { font-size: 1.1rem; color: #64748B; max-width: 500px; } 
+  /* --- Canvas & Setup --- */
+  .bento-universe-light {
+    /* Padding bawah lebar agar lega di bagian bawah */
+    padding: 100px 20px 200px 20px; 
+    background-color: #FAFBFC; /* Latar cerah OFF-WHITE yang bersih */
+    color: #1E293B; /* Slate 800 (Warna teks utama cerah) */
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container { max-width: 1100px; width: 100%; }
+
+  /* --- Cinematic Header --- */
+  .header-section { margin-bottom: 70px; }
+  .cinematic-title { font-size: 3.8rem; font-weight: 900; line-height: 1.1; margin: 0 0 20px; letter-spacing: -2px; text-transform: uppercase; color: #0F172A; }
+  .highlight-text {
+    /* Gradien Hijau-Oranye cerah */
+    background: linear-gradient(135deg, #10B981 0%, #F97316 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header-section p { font-size: 1.25rem; color: #64748B; max-width: 500px; line-height: 1.6; border-left: 3px solid #10B981; padding-left: 20px; font-weight: 500;}
+
+  /* --- BENTO GRID SYSTEM --- */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 150px; /* Tinggi dasar setiap kotak */
+    gap: 25px;
+  }
+
+  /* Utilitas Spanning */
+  .col-span-1 { grid-column: span 1; }
+  .col-span-2 { grid-column: span 2; }
+  .row-span-1 { grid-row: span 1; }
+  .row-span-2 { grid-row: span 2; }
+
+  /* --- Base Item Style --- */
+  .bento-item {
+    background: #FFFFFF; /* Putih bersih total */
+    /* Border sangat tipis dan halus agar tidak kaku */
+    border: 1px solid rgba(15, 23, 42, 0.04); 
+    border-radius: 32px; /* Radius besar ala Bento modern */
+    position: relative;
+    overflow: hidden;
+    /* Bayangan dasar yang sangat lembut */
+    box-shadow: 0 10px 20px -10px rgba(15, 23, 42, 0.03);
+    
+    /* Cubic-bezier Pro: percepatan di awal, perlambatan di akhir */
+    transition: 
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+      border-color 0.3s ease;
+  }
+
+  /* Efek Hover Item */
+  .bento-item:hover {
+    transform: translateY(-8px) scale(1.01);
+    z-index: 10;
+    /* Bayangan lebih kuat saat di-hover untuk memberikan dimensi */
+    box-shadow: 0 40px 80px -15px rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.1); /* Border menyala halus */
+  }
+
+  /* --- Main Focal Point (Price Card) --- */
+  .main-price-card {
+    padding: 50px; display: flex; flex-direction: column; justify-content: space-between;
+    /* Background kartu harga Putih Murni */
+    background: #FFFFFF;
+  }
+
+  /* Efek Inner Glow saat kartu harga di-hover */
+  .hover-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+    opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
+  }
+  .main-price-card:hover .hover-glow { opacity: 1; }
+
+  .badge-status { font-size: 0.8rem; font-weight: 800; color: #F97316; letter-spacing: 2px; margin-bottom: 12px; display: inline-block;}
+  .main-price-card h3 { font-size: 2rem; margin: 0; font-weight: 900; color: #022C22; letter-spacing: -0.5px; }
   
-  .pricing-grid-equal { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 900px; margin: 0 auto; align-items: stretch; } 
+  .price-typography { display: flex; align-items: flex-start; gap: 8px; margin: 15px 0 5px; line-height: 0.8; }
+  .curr { font-size: 2rem; color: #10B981; font-weight: 700; margin-top: 12px; }
+  .amount { font-size: 7rem; font-weight: 900; letter-spacing: -5px; color: #0F172A; text-shadow: 2px 2px 0px rgba(16, 185, 129, 0.05); }
+  .unit { font-size: 2rem; color: #10B981; font-weight: 700; margin-top: auto; margin-bottom: 15px; }
   
-  .pricing-card-clean { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 20px; padding: 0; position: relative; transition: all 0.3s ease; display: flex; flex-direction: column; height: 100%; } 
-  .pricing-card-clean:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15); border-color: #94A3B8; } 
+  .main-price-card .desc { color: #475569; font-size: 1.1rem; line-height: 1.6; margin-bottom: 35px; }
+
+  /* Tombol Utama Oranye-Gradien */
+  .bento-btn {
+    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    color: white; border: none; padding: 20px 30px; border-radius: 20px;
+    font-size: 1.15rem; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+    position: relative; overflow: hidden; transition: 0.3s;
+    box-shadow: 0 10px 20px -5px rgba(234, 88, 12, 0.3);
+    width: max-content;
+  }
   
-  .icon-circle { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; transition: 0.3s; } 
-  .pricing-card-clean:hover .icon-circle.gray { background: #E2E8F0; color: #0F172A; } 
-  
-  .premium-border { border: 2px solid #F97316; box-shadow: 0 10px 30px -5px rgba(249, 115, 22, 0.15); } 
-  .premium-border:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.25); } 
-  
-  .best-value-ribbon { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #EA580C; color: white; font-size: 0.75rem; font-weight: 800; padding: 4px 16px; border-radius: 20px; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); z-index: 10; } 
-  
-  .card-body { padding: 40px 40px 0 40px; flex-grow: 1; } 
-  .card-footer { padding: 30px 40px 40px 40px; margin-top: auto; } 
-  
-  .plan-top { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; } 
-  .icon-circle.gray { background: #F1F5F9; } 
-  .icon-circle.orange { background: #FFF7ED; } 
-  
-  .plan-name h3 { margin: 0; font-size: 1.4rem; font-weight: 800; color: #0F172A; } 
-  .plan-tag { font-size: 0.8rem; font-weight: 600; color: #94A3B8; } 
-  .plan-tag.orange-bg { color: #EA580C; background: #FFF7ED; padding: 2px 8px; border-radius: 4px; } 
-  
-  .price-area { display: flex; align-items: flex-start; gap: 4px; margin-bottom: 20px; } 
-  .curr { font-size: 1.2rem; font-weight: 600; margin-top: 8px; color: #64748B; } 
-  .val { font-size: 3.5rem; font-weight: 800; line-height: 1; color: #0F172A; letter-spacing: -1px; } 
-  .period { display: flex; flex-direction: column; justify-content: center; margin-left: 5px; } 
-  .u { font-size: 1.1rem; font-weight: 700; line-height: 1; color: #334155; } 
-  .p { font-size: 0.85rem; color: #94A3B8; } 
-  
-  .plan-desc-clean { color: #64748B; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; min-height: 46px; } 
-  
-  .benefit-box { background: #FFF7ED; border: 1px dashed #FDBA74; color: #C2410C; font-size: 0.85rem; font-weight: 700; text-align: center; padding: 8px; border-radius: 8px; margin-bottom: 20px; } 
-  
-  .divider-dashed { width: 100%; height: 1px; border-top: 1px dashed #E2E8F0; margin-bottom: 25px; } 
-  
-  .check-list-clean { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; } 
-  .check-list-clean li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: #334155; line-height: 1.4; } 
-  .chk { color: #10B981; font-weight: 800; min-width: 18px; } 
-  .chk-orange { color: #F97316; font-weight: 800; min-width: 18px; } 
-  .cross { color: #CBD5E1; font-weight: 800; min-width: 18px; } 
-  .muted { color: #94A3B8; text-decoration: line-through; }
-  
-  @media (max-width: 968px) { .pricing-grid-equal { grid-template-columns: 1fr; } .plan-desc-clean { min-height: auto; } }
+  /* Efek Kilatan Cahaya di Tombol saat di-hover */
+  .btn-flare {
+    position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-30deg); transition: 0.5s ease-in;
+  }
+  .bento-btn:hover .btn-flare { left: 200%; transition: 0.7s ease-out; }
+  .bento-btn:hover { background: linear-gradient(135deg, #FB923C 0%, #F97316 100%); box-shadow: 0 15px 30px -10px rgba(234, 88, 12, 0.5); transform: translateY(-3px); }
+
+  /* --- Feature Cards (Pola Warna Cerah) --- */
+  .feature-card {
+    display: flex; flex-direction: column; justify-content: center; padding: 30px;
+  }
+
+  .feat-icon { font-size: 3rem; margin-bottom: 15px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .feature-card:hover .feat-icon { transform: scale(1.15) translateY(-5px); }
+
+  .feat-text h4 { margin: 0 0 5px; font-size: 1.1rem; color: #0F172A; font-weight: 700; }
+  .feat-text span { font-size: 0.9rem; color: #64748B; font-weight: 500; }
+
+  /* Efek border nyala saat di-hover */
+  .hover-border { position: absolute; inset: 0; border-radius: 32px; border: 3px solid transparent; transition: 0.4s; pointer-events: none; }
+  .feature-card:hover .hover-border { border-color: rgba(16, 185, 129, 0.3); box-shadow: inset 0 0 15px rgba(16, 185, 129, 0.1); }
+
+  /* ========================================= */
+  /* ============ ANIMASI CSS FIX ============ */
+  /* ========================================= */
+
+  /* Definisi keyframes 'Reveal' yang mulus */
+  @keyframes bentoReveal {
+    0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Kelas dasar animasi untuk elemen bento */
+  .anim-reveal {
+    opacity: 0; /* Mulai dari invisible */
+    animation: bentoReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Memicu animasi staggered (berurutan) saat section masuk viewport */
+  /* use:viewport biasanya menambahkan kelas 'intersecting' di Svelte */
+  :global(.intersecting) .anim-reveal {
+    /* Menghitung delay berdasarkan variabel --i yang diset di HTML */
+    animation-delay: calc(var(--i) * 0.06s);
+  }
+
+  /* Animasi Header Section */
+  @keyframes headerFadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in-section {
+    opacity: 0;
+    animation: headerFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0s;
+  }
+
+  /* ========================================= */
+  /* --- Responsive Breakpoints (Mobile) --- */
+  /* ========================================= */
+  @media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .col-span-2 { grid-column: span 2; }
+    .cinematic-title { font-size: 2.8rem; }
+    .main-price-card { padding: 30px; }
+  }
+
+  @media (max-width: 640px) {
+    .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .col-span-1, .col-span-2, .row-span-1, .row-span-2 { grid-column: span 1; grid-row: span 1; }
+    .amount { font-size: 5rem; }
+    .cinematic-title { font-size: 2.2rem; }
+    .header-section { text-align: center; }
+    .header-section p { border-left: none; padding-left: 0; max-width: 100%; border-bottom: 3px solid #10B981; padding-bottom: 10px; }
+  }
 </style>

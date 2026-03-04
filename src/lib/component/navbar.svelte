@@ -21,9 +21,10 @@
 
     <div class="desktop-links">
       <a href="#features">Fitur</a>
-      <a href="#why">Keunggulan</a>
+      <a href="#whyus">Keunggulan</a>
       <a href="#pricing">Harga</a>
       <a href="#contact">Kontak</a>
+      <a href="https://khwarizmi.co.id/#header">Tentang</a>
     </div>
 
     <div class="nav-actions">

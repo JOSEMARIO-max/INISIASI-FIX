@@ -226,7 +226,7 @@
   /* ========================================= */
   @media (max-width: 1024px) {
     .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .col-span-2 { grid-column: span 2; }
+    .col-span-2 { grid-column: span 2; }. 
     .cinematic-title { font-size: 2.8rem; }
     .main-price-card { padding: 30px; }
   }
